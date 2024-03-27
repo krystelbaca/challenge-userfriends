@@ -1,5 +1,5 @@
 const User = require('../models/User')
-const dijkstra = require('../utils/findDistance')
+const { findDistance } = require('./../utils/findDistance')
 
 const getUsers = async () => {
   return User.find()
@@ -16,21 +16,22 @@ const createUser = async (user) => {
   return savedUser;
 }
 
-const findRelationshipDistance = async (user1, user2) => {
-  // create dictionary to get ids -> letters
+const findRelationshipDistance = async (friend1, friend2) => {
   const users = await getUsers()
-  const dictionary = Object.fromEntries(
-    users.map(({ id }) => [
-      id, String.fromCharCode(64 + id)
-    ])
-  )
+  const distance = await findDistance(users, friend1, friend2)
 
-  const friend1 = dictionary[user1]
-  const friend2 = dictionary[user2]
-  
-  const distance = dijkstra.findDistance(friend1, friend2)
+  const { cost } = distance
 
-  return distance
+  switch(cost) {
+    case 1:
+      return "1st distance relationship";
+    case 2:
+      return "2nd distance relationship";
+    case 3:
+      return "3rd distance relationship";
+    default:
+      return "No direct relationship found";
+  }
 
 }
 

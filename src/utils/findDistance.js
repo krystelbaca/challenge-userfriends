@@ -1,26 +1,29 @@
 const Graph = require('node-dijkstra')
 
-const findDistance = (friend1, friend2) => {
+const findDistance = async (users, user1, user2) => {
   const friends = new Graph()
 
-  friends.addNode('A', {B: 1})
-  friends.addNode('B', {A:1, C:1})
-  friends.addNode('C', {B: 1, D:1})
-  friends.addNode('D', {C: 1})
+  users.forEach(({ id, friendList }) => {
+    // creating the graph
+      const nodeName = String.fromCharCode(64 + id)
+      const neighbors = {}
+  
+      friendList.forEach(friendId => {
+          neighbors[String.fromCharCode(64 + friendId)] = 1
+      })
 
-  const distance = friends.path(friend1, friend2, { cost: true })
+      friends.addNode(nodeName, neighbors)
+  })
 
-  const { cost } = distance
-    switch (cost) {
-        case 1:
-            return "1st distance relationship";
-        case 2:
-            return "2nd distance relationship";
-        case 3:
-            return "3rd distance relationship";
-        default:
-            return "No direct relationship found";
-    }
+  const path = friends.path(
+    String.fromCharCode(64 + user1), 
+    String.fromCharCode(64 + user2),
+    { cost: true }
+  )
+
+  return path
 }
 
-module.exports = { findDistance }
+module.exports = {
+  findDistance
+}
