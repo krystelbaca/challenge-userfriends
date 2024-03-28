@@ -5,15 +5,25 @@ const getUsers = async () => {
   return User.find()
 }
 
-const getUserById = async (userId) => {
-  return User.findById(userId)
+const findOne = async (userId) => {  
+  return User.findOne({ id: userId })
 }
 
 const createUser = async (user) => {
-  const newUser = new User(user);
-  const savedUser = await newUser.save();
+  const newUser = new User(user)
+  const savedUser = await newUser.save()
   
-  return savedUser;
+  return savedUser
+}
+
+const editUser = async (userId, body) => {
+  const user = await findOne(userId)
+
+  if (!user) {
+    throw new Error('User not found')
+  }
+
+  return user.save(body)
 }
 
 const findRelationshipDistance = async (friend1, friend2) => {
@@ -24,20 +34,29 @@ const findRelationshipDistance = async (friend1, friend2) => {
 
   switch(cost) {
     case 1:
-      return "1st distance relationship";
+      return "1st distance relationship"
     case 2:
-      return "2nd distance relationship";
+      return "2nd distance relationship"
     case 3:
-      return "3rd distance relationship";
+      return "3rd distance relationship"
     default:
-      return "No direct relationship found";
+      return "No direct relationship found"
   }
+
+}
+
+const removeUser = async (userId) => {
+  const user = await findOne(userId)
+
+  return User.deleteOne(user)
 
 }
 
 module.exports = {
   getUsers,
-  getUserById,
+  findOne,
   createUser,
+  editUser,
   findRelationshipDistance,
+  removeUser,
 }

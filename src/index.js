@@ -6,9 +6,10 @@ const app = express()
 
 app.use(express.json())
 
-mongoose.connect('mongodb://localhost:27017/users', {
+mongoose.connect('mongodb://mongodb:27017/users', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
+  serverSelectionTimeoutMS: 5000,
 })
   .then(() => console.log('Connected to MongoDB'))
   .catch(err => console.error('Error connecting to MongoDB:', err))

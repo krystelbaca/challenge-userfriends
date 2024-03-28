@@ -22,6 +22,18 @@ const createUser = async (req, res) => {
   }
 }
 
+const editUser = async (req, res) => {
+  try {
+    const userId = req.query.userId
+    const user = await userService.editUser(userId, req.body)
+    return res.status(200).json(user)
+
+  } catch (error) {
+    console.error('Error editing user:', error)
+    return res.status(500).json({ error: 'Internal Server Error' })
+  }
+}
+
 const findRelationshipDistance = async (req, res) => {
   try {
     const user1 = parseInt(req.query.user1)
@@ -36,8 +48,22 @@ const findRelationshipDistance = async (req, res) => {
   }
 }
 
+const removeUser = async (req, res) => {
+  try {
+    const userId = req.query.userId
+    const user = await userService.removeUser(userId)
+    return res.status(200).json(user)
+
+  } catch (error) {
+    console.error('Error removing user:', error)
+    return res.status(500).json({ error: 'Internal Server Error' })
+  }
+}
+
 module.exports = {
   getUsers,
   createUser,
+  editUser,
   findRelationshipDistance,
+  removeUser,
 }
